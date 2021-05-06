@@ -47,3 +47,10 @@ captures/
 .externalNativeBuild
 StreamaxiaOpenSDKDemo/.idea/libraries
 workspace.xml
+
+# VS Code/eclipse project related things
+StreamaxiaOpenSDKDemo/.settings/
+StreamaxiaOpenSDKDemo/appdemo/.settings/
+StreamaxiaOpenSDKDemo/streamaxia-opensdk/.settings/
+*.classpath
+*.project
