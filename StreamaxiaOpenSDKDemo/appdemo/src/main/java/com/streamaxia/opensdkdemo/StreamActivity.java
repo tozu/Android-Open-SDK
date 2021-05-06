@@ -1,5 +1,6 @@
 package com.streamaxia.opensdkdemo;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -7,12 +8,14 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 
@@ -31,13 +34,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+@SuppressLint("NonConstantResourceId")
 public class StreamActivity extends AppCompatActivity implements RtmpHandler.RtmpListener, RecordHandler.RecordListener,
         EncoderHandler.EncodeListener {
 
     private final String TAG = StreamActivity.class.getSimpleName();
 
     // Set default values for the streamer
-    public final static String streamaxiaStreamName = "demo";
+    public final static String streamaxiaStreamName = "bkGEI8KWHjj";
 
     // The view that displays the camera feed
     @BindView(R.id.preview)
@@ -73,6 +77,7 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
         setStreamerDefaultValues();
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onResume() {
         super.onResume();
@@ -110,13 +115,14 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
         mPublisher.stopRecord();
     }
 
+    @SuppressLint("SetTextI18n")
     @OnClick(R.id.start_stop)
     public void startStopStream() {
         if (startStopTextView.getText().toString().toLowerCase().equals("start")) {
             startStopTextView.setText("STOP");
             mChronometer.setBase(SystemClock.elapsedRealtime());
             mChronometer.start();
-            mPublisher.startPublish("rtmp://rtmp.streamaxia.com/streamaxia/" + streamaxiaStreamName);
+            mPublisher.startPublish("rtmp://eu-west.streamify.io/broadcast/" + streamaxiaStreamName);
             takeSnapshot();
         } else {
             startStopTextView.setText("START");
@@ -145,7 +151,7 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
     }
 
     @Override
-    public void onConfigurationChanged(Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         mPublisher.setScreenOrientation(newConfig.orientation);
     }
@@ -164,15 +170,10 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
         mPublisher.setVideoOutputResolution(resolution.width, resolution.height, this.getResources().getConfiguration().orientation);
     }
 
+    @SuppressLint("SetTextI18n")
     private void setStatusMessage(final String msg) {
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                stateTextView.setText("[" + msg + "]");
-            }
-        });
+        runOnUiThread(() -> stateTextView.setText("[" + msg + "]"));
     }
-
 
     /*
      * EncoderHandler implementation
@@ -238,6 +239,7 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
         setStatusMessage(s);
     }
 
+    @SuppressLint("SetTextI18n")
     @Override
     public void onRtmpConnected(String s) {
         setStatusMessage(s);
@@ -265,23 +267,23 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
     }
 
     @Override
-    public void onRtmpVideoFpsChanged(double v) {
-
+    public void onRtmpVideoFpsChanged(double fps) {
+        Log.e(TAG, "onRtmpVideoFpsChanged: " + fps);
     }
 
     @Override
-    public void onRtmpVideoBitrateChanged(double v) {
-
+    public void onRtmpVideoBitrateChanged(double videoBitrate) {
+        Log.e(TAG, "onRtmpVideoBitrateChanged: " + videoBitrate);
     }
 
     @Override
-    public void onRtmpAudioBitrateChanged(double v) {
-
+    public void onRtmpAudioBitrateChanged(double audioBitrate) {
+        Log.e(TAG, "onRtmpAudioBitrateChanged: " + audioBitrate);
     }
 
     @Override
-    public void onRtmpBitrateChanged(double v) {
-
+    public void onRtmpBitrateChanged(double bitrate) {
+        Log.e(TAG, "onRtmpBitrateChanged: " + bitrate);
     }
 
     @Override
@@ -306,7 +308,7 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
 
     @Override
     public void onRtmpAuthenticationg(String s) {
-
+        Log.e(TAG, "onRtmpAuthenticationg: " + s);
     }
 
     private void stopChronometer() {
