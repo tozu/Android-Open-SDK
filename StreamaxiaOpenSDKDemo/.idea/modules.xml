@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/StreamaxiaOpenSDKDemo.iml" filepath="$PROJECT_DIR$/StreamaxiaOpenSDKDemo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/StreamaxiaOpenSDKDemo.iml" filepath="$PROJECT_DIR$/.idea/modules/StreamaxiaOpenSDKDemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/appdemo/StreamaxiaOpenSDKDemo.appdemo.iml" filepath="$PROJECT_DIR$/.idea/modules/appdemo/StreamaxiaOpenSDKDemo.appdemo.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/streamaxia-opensdk/StreamaxiaOpenSDKDemo.streamaxia-opensdk.iml" filepath="$PROJECT_DIR$/.idea/modules/streamaxia-opensdk/StreamaxiaOpenSDKDemo.streamaxia-opensdk.iml" />
     </modules>
