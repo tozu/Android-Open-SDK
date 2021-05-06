@@ -2,9 +2,9 @@ package com.streamaxia.opensdkdemo;
 
 import android.Manifest;
 import android.content.Intent;
+import android.os.Bundle;
 import android.os.Handler;
 import androidx.appcompat.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
@@ -19,7 +19,6 @@ public class SplashscreenActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splashscreen);
-        Dexter.initialize(this);
     }
 
     @Override
@@ -27,16 +26,14 @@ public class SplashscreenActivity extends AppCompatActivity {
         super.onResume();
 
         Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                checkPermissions();
-            }
-        }, 2000);
+        handler.postDelayed(this::checkPermissions, 2000);
     }
 
     private void checkPermissions() {
-        Dexter.checkPermissions(new MultiplePermissionsListener() {
+        Dexter.withContext(this).withPermissions(
+                Manifest.permission.CAMERA,
+                Manifest.permission.RECORD_AUDIO
+        ).withListener(new MultiplePermissionsListener() {
             @Override
             public void onPermissionsChecked(MultiplePermissionsReport report) {
                 if (report.areAllPermissionsGranted()) {
@@ -49,8 +46,8 @@ public class SplashscreenActivity extends AppCompatActivity {
             @Override
             public void onPermissionRationaleShouldBeShown(List<com.karumi.dexter.listener.PermissionRequest> permissions, PermissionToken token) {
                 token.continuePermissionRequest();
-
             }
-        }, Manifest.permission.CAMERA, Manifest.permission.RECORD_AUDIO);
+
+        }).check();
     }
 }

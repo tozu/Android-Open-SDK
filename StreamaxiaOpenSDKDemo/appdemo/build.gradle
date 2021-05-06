@@ -45,8 +45,14 @@ dependencies {
     })
     implementation 'androidx.appcompat:appcompat:1.2.0'
     testImplementation 'junit:junit:4.13.2'
-    implementation 'com.jakewharton:butterknife:8.5.1'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
-    implementation 'com.karumi:dexter:2.3.1'
+
+    // Butterknife
+    implementation 'com.jakewharton:butterknife:10.2.3'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:10.2.3'
+
+    // Dexter (for permissions
+    implementation 'com.karumi:dexter:6.2.2'
+
+    // Streamaxia library
     implementation project(':streamaxia-opensdk')
 }
