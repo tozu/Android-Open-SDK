@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Chronometer;
@@ -25,9 +24,9 @@ import com.streamaxia.android.handlers.EncoderHandler;
 import com.streamaxia.android.handlers.RecordHandler;
 import com.streamaxia.android.handlers.RtmpHandler;
 import com.streamaxia.android.utils.Size;
+import com.streamaxia.opensdkdemo.listeners.RTMPListenerImpl;
 
 import java.io.IOException;
-import java.net.SocketException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,13 +34,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 @SuppressLint("NonConstantResourceId")
-public class StreamActivity extends AppCompatActivity implements RtmpHandler.RtmpListener, RecordHandler.RecordListener,
-        EncoderHandler.EncodeListener {
-
-    private final String TAG = StreamActivity.class.getSimpleName();
+public class StreamActivity
+        extends AppCompatActivity
+        implements RecordHandler.RecordListener, EncoderHandler.EncodeListener {
 
     // Set default values for the streamer
-    public final static String streamaxiaStreamName = "bkGEI8KWHjj";
+    public final static String streamaxiaStreamName = "nx96HyMGijj";
 
     // The view that displays the camera feed
     @BindView(R.id.preview)
@@ -60,15 +58,23 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_stream);
-        ButterKnife.bind(this);
 
+        ButterKnife.bind(this);
         hideStatusBar();
+
         mPublisher = new StreamaxiaPublisher(mCameraView, this);
 
+        // Listeners
         mPublisher.setEncoderHandler(new EncoderHandler(this));
-        mPublisher.setRtmpHandler(new RtmpHandler(this));
+
+        RTMPListenerImpl rtmpListener = new RTMPListenerImpl();
+        mPublisher.setRtmpHandler(new RtmpHandler(rtmpListener));
+        // mPublisher.setRtmpHandler(new RtmpHandler(this));
+
+
         mPublisher.setRecordEventHandler(new RecordHandler(this));
 
+        // Setup Streaming
         mPublisher.setFramerate(30);
         mPublisher.setKeyframeInterval(5);
 
@@ -228,87 +234,6 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
     @Override
     public void onRecordIOException(IOException e) {
         handleException(e);
-    }
-
-    /*
-     * RTMPListener implementation
-     * */
-
-    @Override
-    public void onRtmpConnecting(String s) {
-        setStatusMessage(s);
-    }
-
-    @SuppressLint("SetTextI18n")
-    @Override
-    public void onRtmpConnected(String s) {
-        setStatusMessage(s);
-        startStopTextView.setText("STOP");
-    }
-
-    @Override
-    public void onRtmpVideoStreaming() {
-
-    }
-
-    @Override
-    public void onRtmpAudioStreaming() {
-
-    }
-
-    @Override
-    public void onRtmpStopped() {
-        setStatusMessage("STOPPED");
-    }
-
-    @Override
-    public void onRtmpDisconnected() {
-        setStatusMessage("Disconnected");
-    }
-
-    @Override
-    public void onRtmpVideoFpsChanged(double fps) {
-        Log.e(TAG, "onRtmpVideoFpsChanged: " + fps);
-    }
-
-    @Override
-    public void onRtmpVideoBitrateChanged(double videoBitrate) {
-        Log.e(TAG, "onRtmpVideoBitrateChanged: " + videoBitrate);
-    }
-
-    @Override
-    public void onRtmpAudioBitrateChanged(double audioBitrate) {
-        Log.e(TAG, "onRtmpAudioBitrateChanged: " + audioBitrate);
-    }
-
-    @Override
-    public void onRtmpBitrateChanged(double bitrate) {
-        Log.e(TAG, "onRtmpBitrateChanged: " + bitrate);
-    }
-
-    @Override
-    public void onRtmpSocketException(SocketException e) {
-        handleException(e);
-    }
-
-    @Override
-    public void onRtmpIOException(IOException e) {
-        handleException(e);
-    }
-
-    @Override
-    public void onRtmpIllegalArgumentException(IllegalArgumentException e) {
-        handleException(e);
-    }
-
-    @Override
-    public void onRtmpIllegalStateException(IllegalStateException e) {
-        handleException(e);
-    }
-
-    @Override
-    public void onRtmpAuthenticationg(String s) {
-        Log.e(TAG, "onRtmpAuthenticationg: " + s);
     }
 
     private void stopChronometer() {
