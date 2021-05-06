@@ -7,13 +7,14 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Chronometer;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.streamaxia.android.CameraPreview;
 import com.streamaxia.android.StreamaxiaPublisher;
@@ -29,8 +30,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
-;
 
 public class StreamActivity extends AppCompatActivity implements RtmpHandler.RtmpListener, RecordHandler.RecordListener,
         EncoderHandler.EncodeListener {
@@ -176,9 +175,9 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
 
 
     /*
-    * EncoderHandler implementation
-    * You can use these callbacks to get events from the streamer
-    * */
+     * EncoderHandler implementation
+     * You can use these callbacks to get events from the streamer
+     * */
 
     @Override
     public void onNetworkWeak() {
@@ -197,8 +196,8 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
 
 
     /*
-    * RecordHandler implementation
-    * */
+     * RecordHandler implementation
+     * */
 
     @Override
     public void onRecordPause() {
@@ -231,8 +230,8 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
     }
 
     /*
-    * RTMPListener implementation
-    * */
+     * RTMPListener implementation
+     * */
 
     @Override
     public void onRtmpConnecting(String s) {
@@ -277,6 +276,11 @@ public class StreamActivity extends AppCompatActivity implements RtmpHandler.Rtm
 
     @Override
     public void onRtmpAudioBitrateChanged(double v) {
+
+    }
+
+    @Override
+    public void onRtmpBitrateChanged(double v) {
 
     }
 
