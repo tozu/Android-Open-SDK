@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Chronometer;
@@ -24,9 +25,9 @@ import com.streamaxia.android.handlers.EncoderHandler;
 import com.streamaxia.android.handlers.RecordHandler;
 import com.streamaxia.android.handlers.RtmpHandler;
 import com.streamaxia.android.utils.Size;
-import com.streamaxia.opensdkdemo.listeners.RTMPListenerImpl;
 
 import java.io.IOException;
+import java.net.SocketException;
 import java.util.List;
 
 import butterknife.BindView;
@@ -36,7 +37,12 @@ import butterknife.OnClick;
 @SuppressLint("NonConstantResourceId")
 public class StreamActivity
         extends AppCompatActivity
-        implements RecordHandler.RecordListener, EncoderHandler.EncodeListener {
+        implements
+        RecordHandler.RecordListener,
+        EncoderHandler.EncodeListener,
+        RtmpHandler.RtmpListener {
+
+    private final String TAG = this.getClass().getSimpleName();
 
     // Set default values for the streamer
     public final static String streamaxiaStreamName = "nx96HyMGijj";
@@ -67,10 +73,14 @@ public class StreamActivity
         // Listeners
         mPublisher.setEncoderHandler(new EncoderHandler(this));
 
-        RTMPListenerImpl rtmpListener = new RTMPListenerImpl();
-        mPublisher.setRtmpHandler(new RtmpHandler(rtmpListener));
-        // mPublisher.setRtmpHandler(new RtmpHandler(this));
+        // DOES NOT work (logs are omitted)
+        // RTMPListenerImpl rtmpListener = new RTMPListenerImpl();
+        // mPublisher.setRtmpHandler(new RtmpHandler(rtmpListener));
 
+        // DOES work (logs are shown)
+        mPublisher.setRtmpHandler(new RtmpHandler(this));
+
+        // todo(tobias): test to separate Handler(s) instead
 
         mPublisher.setRecordEventHandler(new RecordHandler(this));
 
@@ -234,6 +244,91 @@ public class StreamActivity
     @Override
     public void onRecordIOException(IOException e) {
         handleException(e);
+    }
+
+
+    @Override
+    public void onRtmpConnecting(String s) {
+        Log.e(TAG, "onRtmpConnecting: " + s);
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onRtmpConnected(String s) {
+        // setStatusMessage(s);
+        // startStopTextView.setText("STOP");
+        Log.e(TAG, "onRtmpConnecting: " + s);
+    }
+
+    @Override
+    public void onRtmpVideoStreaming() {
+
+    }
+
+    @Override
+    public void onRtmpAudioStreaming() {
+
+    }
+
+    @Override
+    public void onRtmpStopped() {
+        // setStatusMessage("STOPPED");
+        Log.e(TAG, "onRtmpStopped");
+    }
+
+    @Override
+    public void onRtmpDisconnected() {
+        // setStatusMessage("Disconnected");
+        Log.e(TAG, "onRtmpDisconnected");
+    }
+
+    @Override
+    public void onRtmpVideoFpsChanged(double fps) {
+        Log.e(TAG, "onRtmpVideoFpsChanged: " + fps);
+    }
+
+    @Override
+    public void onRtmpVideoBitrateChanged(double videoBitrate) {
+        Log.e(TAG, "onRtmpVideoBitrateChanged: " + videoBitrate);
+    }
+
+    @Override
+    public void onRtmpAudioBitrateChanged(double audioBitrate) {
+        Log.e(TAG, "onRtmpAudioBitrateChanged: " + audioBitrate);
+    }
+
+    @Override
+    public void onRtmpBitrateChanged(double bitrate) {
+        Log.e(TAG, "onRtmpBitrateChanged: " + bitrate);
+    }
+
+    @Override
+    public void onRtmpSocketException(SocketException e) {
+        // handleException(e);
+        Log.e(TAG, "onRtmpSocketException: " + e);
+    }
+
+    @Override
+    public void onRtmpIOException(IOException e) {
+        // handleException(e);
+        Log.e(TAG, "onRtmpIOException: " + e);
+    }
+
+    @Override
+    public void onRtmpIllegalArgumentException(IllegalArgumentException e) {
+        // handleException(e);
+        Log.e(TAG, "onRtmpIllegalArgumentException: " + e);
+    }
+
+    @Override
+    public void onRtmpIllegalStateException(IllegalStateException e) {
+        // handleException(e);
+        Log.e(TAG, "onRtmpIllegalStateException: " + e);
+    }
+
+    @Override
+    public void onRtmpAuthenticationg(String s) {
+        Log.e(TAG, "onRtmpAuthenticationg: " + s);
     }
 
     private void stopChronometer() {
